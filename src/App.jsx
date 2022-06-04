@@ -26,6 +26,7 @@ function App() {
 
   const saveExpend = (expend) => {
     expend.id = generateID()
+    expend.expendDate = Date.now()
     setExpends([...expends, expend])
     setAnimateModal(true);
     setTimeout(() => {
@@ -46,7 +47,8 @@ function App() {
       {isValidBudget && (
         <>
           <main>
-          < ListExpends />
+          < ListExpends 
+          expends={expends} />
           </main>
           <div className="nuevo-gasto">
             <img
