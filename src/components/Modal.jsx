@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Message from "./Message";
 import CloseBtn from "../img/cerrar.svg";
 
-const Modal = ({ setModal, animateModal, setAnimateModal }) => {
+const Modal = ({ setModal, animateModal, setAnimateModal, saveExpend }) => {
   const [message, setMessage] = useState("");
   const [expendName, setExpendName] = useState("");
   const [amount, setAmount] = useState("");
@@ -24,8 +24,10 @@ const Modal = ({ setModal, animateModal, setAnimateModal }) => {
         setMessage("");
       }, 3000);
 
+      
       return;
     }
+    saveExpend({expendName, amount, category})
   };
   return (
     <div className="modal">
