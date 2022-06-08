@@ -2,17 +2,34 @@ import { useEffect, useState } from "react";
 import Message from "./Message";
 import CloseBtn from "../img/cerrar.svg";
 
-const Modal = ({ setModal, animateModal, setAnimateModal, saveExpend }) => {
+const Modal = ({ 
+    setModal, 
+    animateModal,
+    setAnimateModal, 
+    saveExpend, 
+    editExpend 
+  }) => {
+
   const [message, setMessage] = useState("");
   const [expendName, setExpendName] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
+  useEffect(() =>{
+    if(Object.keys(editExpend).length>0){      
+      setExpendName(editExpend.expendName)
+      setAmount(editExpend.amount)
+      setCategory(editExpend.category)      
+    }
+
+  }, [])
+
   const hideModal = () => {
     setAnimateModal(false);
+    
     setTimeout(() => {
       setModal(false);
-    }, 500);
+    }, 100);
   };
 
   const handleSubmit = (e) => {
@@ -58,7 +75,7 @@ const Modal = ({ setModal, animateModal, setAnimateModal, saveExpend }) => {
             type="number"
             placeholder="Add the expend amount"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => setAmount(Number(e.target.value))}
           />
 
           <div className="campo">
@@ -70,11 +87,11 @@ const Modal = ({ setModal, animateModal, setAnimateModal, saveExpend }) => {
             >
               <option value="">select</option>
               <option value="ahorro">Ahorro</option>
-              <option value="Food">Food</option>
-              <option value="House">House</option>
-              <option value="Expends">Expends</option>
-              <option value="Salud">Salud</option>
-              <option value="Subscriptions">Subscriptions</option>
+              <option value="food">Food</option>
+              <option value="home">Home</option>
+              <option value="expends">Expends</option>
+              <option value="salud">Salud</option>
+              <option value="subscriptions">Subscriptions</option>
             </select>
           </div>
 

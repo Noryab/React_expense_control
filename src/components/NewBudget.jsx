@@ -6,7 +6,7 @@ const NewBudget = ({ budget, setBudget, setIsValidBudget }) => {
 
   const handleBudget = (e) => {
     e.preventDefault();
-    if (!budget || budget < 0) {
+    if (!budget || budget <= 0) {
       setMessage("no es un numero valido");
       return;
     }

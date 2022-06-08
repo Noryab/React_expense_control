@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import ListExpends from "./components/ListExpends";
@@ -9,35 +9,49 @@ import { generateID } from "./helpers";
 import IconNewBudget from "./img/nuevo-gasto.svg";
 
 function App() {
+  
+  const [expends, setExpends] = useState([]);
   const [budget, setBudget] = useState(0);
   const [isValidBudget, setIsValidBudget] = useState("");
   const [modal, setModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
 
-  const [expends, setExpends] = useState([]);
+  const [editExpend, setEditExpend] = useState({})
+
+  useEffect(() =>{
+    console.log("sisisis")
+    if(Object.keys(editExpend).length >0){      
+      setModal(true);     
+      setTimeout(() => {
+        setAnimateModal(true)
+    }, 500)        
+    }    
+  }, [editExpend])
+
 
   const handleNewBudget = () => {
-    setModal(true);
-
+    setModal(true); 
+    setEditExpend({})
     setTimeout(() => {
       setAnimateModal(true);
-    }, 500);
+    }, 100);
   };
 
   const saveExpend = (expend) => {
     expend.id = generateID()
     expend.expendDate = Date.now()
     setExpends([...expends, expend])
-    setAnimateModal(true);
+    setAnimateModal(false);
     setTimeout(() => {
       setModal(false);
-    }, 500);
+    }, 100);
 
   };
 
   return (
-    <div>
+    <div className={modal ? 'fijar': '' }>    
       <Header
+        expends={expends}
         budget={budget}
         setBudget={setBudget}
         isValidBudget={isValidBudget}
@@ -48,7 +62,8 @@ function App() {
         <>
           <main>
           < ListExpends 
-          expends={expends} />
+            expends={expends}
+            setEditExpend={setEditExpend} />
           </main>
           <div className="nuevo-gasto">
             <img
@@ -65,6 +80,7 @@ function App() {
           animateModal={animateModal}
           setAnimateModal={setAnimateModal}
           saveExpend={saveExpend}
+          editExpend={editExpend}
         />
       )}
     </div>
