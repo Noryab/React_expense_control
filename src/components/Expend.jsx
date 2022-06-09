@@ -28,8 +28,9 @@ const dictIcons={
     subscriptions:IconSubscriptions
 }
 
-const Expend = ({expend, setEditExpend}) => {
+const Expend = ({expend, setEditExpend, deleteExpend}) => {
     const {category, expendName, amount, id, expendDate} = expend
+    
     const leadingActions = () =>(
         <LeadingActions>
             <SwipeAction onClick={() => setEditExpend(expend) } >
@@ -40,7 +41,9 @@ const Expend = ({expend, setEditExpend}) => {
 
     const trailingActions = () =>(
         <TrailingActions>
-            <SwipeAction onClick = {() => console.log("delete")}>
+            <SwipeAction 
+                onClick = {() => deleteExpend(id)}
+                destructive={true}>
             Delete
             </SwipeAction>
         </TrailingActions>

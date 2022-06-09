@@ -10,12 +10,11 @@ import IconNewBudget from "./img/nuevo-gasto.svg";
 
 function App() {
   
-  const [expends, setExpends] = useState([]);
-  const [budget, setBudget] = useState(0);
+  const [expends, setExpends] = useState(localStorage.getItem('expends') ? JSON.parse(localStorage.getItem('expends')) : []);
+  const [budget, setBudget] = useState(Number(localStorage.getItem('budget')) ?? 0);
   const [isValidBudget, setIsValidBudget] = useState("");
   const [modal, setModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
-
   const [editExpend, setEditExpend] = useState({})
 
   useEffect(() =>{
@@ -28,6 +27,23 @@ function App() {
     }    
   }, [editExpend])
 
+  useEffect(() =>{
+    localStorage.setItem('budget', budget ?? 0)
+  },[budget] )
+
+  useEffect(() =>{
+    localStorage.setItem('expends', JSON.stringify(expends) ?? [] )
+  },[expends] )
+
+
+  useEffect(() =>{
+    const budgetLS = Number(localStorage.getItem('budget')) ?? 0;
+
+    if(budgetLS>0){
+      setIsValidBudget(true)
+    }
+  }, [])
+
 
   const handleNewBudget = () => {
     setModal(true); 
@@ -38,15 +54,28 @@ function App() {
   };
 
   const saveExpend = (expend) => {
-    expend.id = generateID()
-    expend.expendDate = Date.now()
-    setExpends([...expends, expend])
+
+    if(expend.id){
+      //edit
+      const updatedExpends = expends.map( expendState => expendState.id=== expend.id? expend: expendState)
+      setExpends(updatedExpends)
+      setEditExpend({})
+    }else{
+      //new
+      expend.id = generateID()
+      expend.expendDate = Date.now()
+      setExpends([...expends, expend])
+    }
     setAnimateModal(false);
     setTimeout(() => {
       setModal(false);
-    }, 100);
-
+    }, 100);  
   };
+
+  const deleteExpend = id =>{
+      const updateExpends = expends.filter(expend => expend.id !== id)
+      setExpends(updateExpends)
+  }
 
   return (
     <div className={modal ? 'fijar': '' }>    
@@ -63,7 +92,8 @@ function App() {
           <main>
           < ListExpends 
             expends={expends}
-            setEditExpend={setEditExpend} />
+            setEditExpend={setEditExpend}
+            deleteExpend ={deleteExpend} />
           </main>
           <div className="nuevo-gasto">
             <img
@@ -81,6 +111,7 @@ function App() {
           setAnimateModal={setAnimateModal}
           saveExpend={saveExpend}
           editExpend={editExpend}
+          setEditExpend={setEditExpend}
         />
       )}
     </div>

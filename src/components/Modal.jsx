@@ -7,25 +7,31 @@ const Modal = ({
     animateModal,
     setAnimateModal, 
     saveExpend, 
-    editExpend 
+    editExpend,
+    setEditExpend
   }) => {
 
   const [message, setMessage] = useState("");
   const [expendName, setExpendName] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
+  const [expendDate, setDate] = useState("");
+  const [id, setId] = useState("")
 
   useEffect(() =>{
     if(Object.keys(editExpend).length>0){      
       setExpendName(editExpend.expendName)
       setAmount(editExpend.amount)
-      setCategory(editExpend.category)      
+      setCategory(editExpend.category)     
+      setId(editExpend.id) 
+      setDate(editExpend.expendDate)
     }
 
   }, [])
 
   const hideModal = () => {
     setAnimateModal(false);
+    setEditExpend({})
     
     setTimeout(() => {
       setModal(false);
@@ -39,12 +45,10 @@ const Modal = ({
 
       setTimeout(() => {
         setMessage("");
-      }, 3000);
-
-      
+      }, 3000);    
       return;
     }
-    saveExpend({expendName, amount, category})
+    saveExpend({expendName, amount, category, id, expendDate})
   };
   return (
     <div className="modal">
@@ -56,7 +60,8 @@ const Modal = ({
         onSubmit={handleSubmit}
         className={`formulario ${animateModal ? "animar" : "cerrar"}`}
       >
-        <legend>New expend</legend>
+
+        <legend>{editExpend.expendName ? "Edit expend" : "New expend"}</legend>
         {message && <Message type="error">{message}</Message>}
 
         <div className="campo">
@@ -85,7 +90,7 @@ const Modal = ({
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">select</option>
+              <option value="">---select---</option>
               <option value="ahorro">Ahorro</option>
               <option value="food">Food</option>
               <option value="home">Home</option>
@@ -95,7 +100,7 @@ const Modal = ({
             </select>
           </div>
 
-          <input type="submit" value="Add expend" />
+          <input type="submit" value={editExpend.expendName ? "Edit expend" : "Add expend"} />
         </div>
       </form>
     </div>
