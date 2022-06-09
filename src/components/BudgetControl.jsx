@@ -3,7 +3,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import "react-circular-progressbar/dist/styles.css"
 
 
-const BudgetControl = ({ expends, budget }) => {
+const BudgetControl = ({ expends, setExpends, budget, setBudget, setIsValidBudget }) => {
 
     const [expended, setExpended] = useState(0)
     const [available, setAvailable] = useState(0)
@@ -30,6 +30,16 @@ const BudgetControl = ({ expends, budget }) => {
       currency: "USD",
     });
   };
+
+  const handleResetApp= () => {
+    const choose = confirm('Do you want to reset App?')
+    if(choose){
+      setBudget(0)
+      setExpends([])
+      setIsValidBudget(false)
+    }
+
+  }
   
   return (
     <div className="contenedor-presupuesto contenedor sombra dos-columnas">
@@ -47,11 +57,16 @@ const BudgetControl = ({ expends, budget }) => {
       </div>
 
       <div className="contenido-presupuesto">
+        <button className="reset-app"
+                type="button"
+                onClick={handleResetApp}>
+          Reset App
+        </button>
         <p>
           <span>Budget</span> {formatQuantity(budget)}
         </p>
-        <p>
-          <span>Available</span> {formatQuantity(available)}
+        <p className={`${ available <0 ? 'negativo': ''}`}>
+          <span >Available</span> {formatQuantity(available)}
         </p>
         <p>
           <span>Spent</span> {formatQuantity(expended)}

@@ -10,8 +10,7 @@ const NewBudget = ({ budget, setBudget, setIsValidBudget }) => {
       setMessage("no es un numero valido");
       return;
     }
-    setMessage("");
-    console.log("si es numero");
+    setMessage("");    
     setIsValidBudget(true);
   };
   return (

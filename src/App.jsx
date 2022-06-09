@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
+import Filters from "./components/Filters";
 import Header from "./components/Header";
 import ListExpends from "./components/ListExpends";
-
 import Modal from "./components/Modal";
 
 import { generateID } from "./helpers";
@@ -10,15 +10,16 @@ import IconNewBudget from "./img/nuevo-gasto.svg";
 
 function App() {
   
+  const [filter, setFilter] = useState("");
   const [expends, setExpends] = useState(localStorage.getItem('expends') ? JSON.parse(localStorage.getItem('expends')) : []);
   const [budget, setBudget] = useState(Number(localStorage.getItem('budget')) ?? 0);
   const [isValidBudget, setIsValidBudget] = useState("");
   const [modal, setModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
   const [editExpend, setEditExpend] = useState({})
+  const [filterExpends, setFilterExpends] = useState([])
 
-  useEffect(() =>{
-    console.log("sisisis")
+  useEffect(() =>{    
     if(Object.keys(editExpend).length >0){      
       setModal(true);     
       setTimeout(() => {
@@ -35,7 +36,13 @@ function App() {
     localStorage.setItem('expends', JSON.stringify(expends) ?? [] )
   },[expends] )
 
-
+  useEffect( () =>  {
+      if(filter){
+        // filtering expends by category
+        const filterExpends = expends.filter(expend => expend.category === filter )
+        setFilterExpends(filterExpends)
+      }
+  }, [filter])
   useEffect(() =>{
     const budgetLS = Number(localStorage.getItem('budget')) ?? 0;
 
@@ -79,8 +86,9 @@ function App() {
 
   return (
     <div className={modal ? 'fijar': '' }>    
-      <Header
+      <Header        
         expends={expends}
+        setExpends = {setExpends}
         budget={budget}
         setBudget={setBudget}
         isValidBudget={isValidBudget}
@@ -90,10 +98,16 @@ function App() {
       {isValidBudget && (
         <>
           <main>
-          < ListExpends 
-            expends={expends}
-            setEditExpend={setEditExpend}
-            deleteExpend ={deleteExpend} />
+            <Filters 
+              filter={filter}
+              setFilter={setFilter}/>
+            < ListExpends 
+              expends={expends}
+              setEditExpend={setEditExpend}
+              deleteExpend ={deleteExpend}
+              filter={filter}
+              filterExpends={filterExpends}
+               />
           </main>
           <div className="nuevo-gasto">
             <img
